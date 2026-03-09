@@ -1,6 +1,23 @@
 
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
+## ⚠️ MANDATORY: Angular Skills Usage
+
+**The use of Angular skills is NOT optional — it is MANDATORY.** Before performing ANY Angular-related task, you **MUST** invoke the corresponding skill. Failing to do so is a violation of these project instructions.
+
+| Skill | Propósito | Cuándo invocarlo |
+|-------|-----------|------------------|
+| `angular-component` | Crear y refactorizar componentes standalone con señales, OnPush, host bindings, content projection y lifecycle hooks. | Crear un componente nuevo, migrar inputs de clase a señales, agregar host bindings, o implementar componentes interactivos accesibles. |
+| `angular-di` | Implementar inyección de dependencias con `inject()`, tokens de inyección y configuración de providers. | Crear servicios, configurar providers a distintos niveles, crear tokens inyectables, o gestionar servicios singleton vs scoped. |
+| `angular-directives` | Crear directivas personalizadas para manipulación del DOM y extensión de comportamiento. | Crear comportamientos reutilizables del DOM, extender funcionalidad de elementos, o componer comportamientos con host directives. |
+| `angular-forms` | Construir formularios reactivos basados en señales con el Signal Forms API. | Implementar formularios, agregar validación, crear formularios multi-paso, o formularios con campos condicionales. |
+| `angular-http` | Implementar fetching de datos con `resource()`, `httpResource()` y `HttpClient`. | Llamadas a APIs, carga de datos con señales, manejo de request/response, o interceptores HTTP. |
+| `angular-routing` | Implementar routing con lazy loading, guards funcionales, resolvers y parámetros de ruta. | Configurar rutas, agregar guards de autenticación, implementar lazy loading, o leer parámetros de ruta con señales. |
+| `angular-signals` | Implementar gestión de estado reactivo con `signal()`, `computed()`, `linkedSignal()` y `effect()`. | Gestión de estado, convertir BehaviorSubject/Observable a señales, o implementar flujos de datos reactivos. |
+| `angular-ssr` | Implementar server-side rendering e hidratación con `@angular/ssr`. | Configurar SSR, corregir hydration mismatches, pre-renderizar rutas, o hacer código compatible con SSR. |
+| `angular-testing` | Escribir tests unitarios e integración con Vitest o Jasmine usando TestBed y patrones modernos. | Crear tests, testear componentes con señales, mockear dependencias, o configurar infraestructura de testing. |
+| `angular-tooling` | Usar Angular CLI y herramientas de desarrollo efectivamente. | Crear proyectos, generar componentes/servicios, configurar builds, ejecutar tests, u optimizar builds de producción. |
+
 ## TypeScript Best Practices
 
 - Use strict type checking

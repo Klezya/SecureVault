@@ -1,21 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-password-detail',
   imports: [],
   templateUrl: './password-detail.html',
   styleUrl: './password-detail.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordDetail {
-  user_id: number | null = null;
-  private route = inject(ActivatedRoute);
-
-  constructor() {
-    
-    console.log(this.route.snapshot.paramMap.get("id"));
-    this.user_id = Number(this.route.snapshot.paramMap.get("id"));
-  }
-  
-
+  readonly id = input.required<string>();
+  readonly userId = computed(() => Number(this.id()));
 }

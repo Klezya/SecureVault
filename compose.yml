@@ -1,0 +1,63 @@
+services:
+
+  db:
+    image: postgres:18-alpine
+    container_name: securevault_db
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: securevault_admin
+      POSTGRES_PASSWORD: securevault_password
+      POSTGRES_DB: securevault_db
+    
+    ports:
+      - "5432:5432"
+
+    expose:
+      - 5432
+
+    volumes:
+      - pg_data:/home/klezya/personal/SecureVault/postgres/data
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U securevault_admin -d securevault_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+  backend:
+    build: ./backend 
+    container_name: securevault_backend
+    ports:
+      - "8000:8000"
+    
+    env_file:
+      - ./backend/.env
+
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./backend
+          target: /app
+          ignore:
+            - __pycache__
+            - .venv
+            - .git
+        - action: rebuild
+          path: ./backend/Dockerfile
+
+        - action: rebuild
+          path: ./backend/pyproject.toml
+
+        - action: rebuild
+          path: ./backend/uv.lock
+
+    
+volumes:
+  pg_data:

@@ -1,0 +1,10 @@
+# Backend
+__pycache__/
+*/__pycache__/
+.venv/
+*.pyc
+*.pyo
+backend/__pycache__/
+
+# Entorno
+.env

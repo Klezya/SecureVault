@@ -44,7 +44,7 @@ services:
       watch:
         - action: sync+restart
           path: ./backend
-          target: /app
+          target: /backend
           ignore:
             - __pycache__
             - .venv

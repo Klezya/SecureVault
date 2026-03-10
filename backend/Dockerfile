@@ -10,7 +10,7 @@ ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 ENV UV_PYTHON_DOWNLOADS=never
 
-WORKDIR /app
+WORKDIR /backend
 
 # 3. Caché de capas estricto: Copiamos SOLO los archivos de definición
 COPY pyproject.toml uv.lock ./
@@ -29,9 +29,9 @@ COPY . .
 RUN uv sync --frozen --no-dev
 
 # 7. Exponemos el entorno virtual al sistema
-# uv crea automáticamente un entorno en /app/.venv
+# uv crea automáticamente un entorno en /backend/.venv
 # Al añadirlo al PATH, los comandos como 'uvicorn' se ejecutarán desde allí
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/backend/.venv/bin:$PATH"
 
 # 8. Seguridad: Usuario sin privilegios
 RUN useradd -m appuser

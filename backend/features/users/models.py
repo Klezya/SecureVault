@@ -11,7 +11,7 @@ class UserTable(SQLModel, table=True):
     __tablename__ = "users"
 
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    username: str = Field(unique=True)
+    username: str
     email: EmailStr = Field(index=True, unique=True)
     password_hash: str
     is_active: bool = Field(default=True)

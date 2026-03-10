@@ -15,3 +15,8 @@ app = FastAPI(lifespan=lifespan)
 async def root():
     return {"status": "ok",
             "message": "Welcome to SecureVault API!"}
+
+# Importar y registrar los routers de las características
+from backend.features.router import app_router
+
+app.include_router(app_router, prefix="/api/v1")

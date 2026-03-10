@@ -17,7 +17,7 @@ services:
       - 5432
 
     volumes:
-      - pg_data:/home/klezya/personal/SecureVault/postgres/data
+      - pg_data:/var/lib/postgresql/data
     
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U securevault_admin -d securevault_db"]

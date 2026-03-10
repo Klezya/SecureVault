@@ -34,6 +34,8 @@ services:
     
     env_file:
       - ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql://securevault_admin:securevault_password@db:5432/securevault_db
 
 
     depends_on:

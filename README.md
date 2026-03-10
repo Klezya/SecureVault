@@ -89,8 +89,11 @@ SecureVault/
 - [Docker](https://www.docker.com/) & Docker Compose
 
 ```bash
-git clone https://github.com/your-username/SecureVault.git
+git clone https://github.com/Klezya/SecureVault.git
 cd SecureVault
+
+# Change to development branch
+git checkout development
 
 cp backend/.env.example backend/.env
 

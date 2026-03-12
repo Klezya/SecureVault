@@ -36,21 +36,19 @@ services:
       - ./backend/.env
     environment:
       - DATABASE_URL=postgresql://securevault_admin:securevault_password@db:5432/securevault_db
+      - SECRET_KEY=aaf5d81275ed869da69916e26112da960375af8ad1872a3f4fa587434d794a69
 
 
     depends_on:
       db:
         condition: service_healthy
 
+    command: ["fastapi", "dev", "--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - ./backend:/backend
+      - /backend/.venv
     develop:
       watch:
-        - action: sync+restart
-          path: ./backend
-          target: /backend
-          ignore:
-            - __pycache__
-            - .venv
-            - .git
         - action: rebuild
           path: ./backend/Dockerfile
 

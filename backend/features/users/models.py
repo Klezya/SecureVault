@@ -39,3 +39,26 @@ class UserCreate(SQLModel):
     username: str
     email: EmailStr
     password: str
+
+class UserLogin(SQLModel):
+    """
+    Schema for user login.
+    Args:
+        email (EmailStr): The email address of the user trying to log in.
+        password (str): The plain text password of the user trying to log in.
+    """
+    email: EmailStr
+    password: str
+
+class UserJwtInfo(SQLModel):
+    """
+    Schema for user information to be included in JWT tokens.
+    Args:
+        id (UUID): The unique identifier of the user.
+        username (str): The username of the user.
+        email (EmailStr): The email address of the user.
+        is_active (bool): Whether the user's account is active.
+    """
+    username: str
+    email: EmailStr
+    is_active: bool

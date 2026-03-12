@@ -1,60 +1,67 @@
 from backend.auth.hash import hash_password, verify_password
-from sqlmodel import Session, select
+from sqlmodel import Session
 
-from .models import UserCreate, UserPublic, UserLogin, UserJwtInfo
-from .repository import select_user_by_email, insert_user 
+from .schemas import UserCreate, UserPublic, UserLogin, UserJwtInfo
+from .repository import get_user_by_email, create_user
 
-def is_email_taken(email: str, session: Session) -> bool:
-    """
-    Checks if an email address is already registered in the database.
-    Args:
-        email (str): The email address to check for availability.
-        session (Session): Injectable database session dependency.
-    Returns:
-        bool: True if the email is already taken, False otherwise.
-    """
-    user = select_user_by_email(email, session)
-    if not user:
-        return False
-    return True
 
-def user_exists(email:str, session: Session) -> bool:
-    """
-    Checks if a user with the given email exists in the database.
-    Args:
-        email (str): The email address to check for existence.
-        session (Session): Injectable database session dependency.
-    Returns:
-        bool: True if the user exists, False otherwise.
-    """
-    if is_email_taken(email=email, session=session):
-        return True
-    return False
+class EmailAlreadyTaken(Exception):
+    """Raised when attempting to register with an email that already exists."""
 
-def authenticate_user(user: UserLogin, session: Session) -> UserJwtInfo:
+
+class InvalidCredentials(Exception):
+    """Raised when login credentials are incorrect."""
+
+
+class InactiveAccount(Exception):
+    """Raised when an inactive user attempts to log in."""
+
+
+def register_user(user: UserCreate, session: Session) -> UserPublic:
     """
-    Authenticates a user by verifying their email and password.
-    Args:
-        user (UserLogin): The user login data containing email and password.
-        session (Session): Injectable database session dependency.
-    Returns:
-        UserJwtInfo: The user information to include in the JWT token if authentication is successful.
+    Registers a new user.
+
     Raises:
-        HTTPException: If the user does not exist or the password is incorrect.
+        EmailAlreadyTaken: If the email is already registered.
     """
-    database_user = select_user_by_email(email=user.email, session=session)
-    if not database_user:
-        return None
-    if not verify_password(plain_password=user.password, hashed_password=database_user.password_hash):
-        return None
-    
-    user_jwt_info = UserJwtInfo(
-        username=database_user.username,
-        email=database_user.email,
-        is_active=database_user.is_active
+    if get_user_by_email(email=user.email, session=session):
+        raise EmailAlreadyTaken(user.email)
+
+    hashed = hash_password(user.password)
+    created = create_user(
+        username=user.username,
+        email=user.email,
+        password_hash=hashed,
+        session=session,
     )
 
-    return user_jwt_info
-    
-    
+    return UserPublic(username=created.username, email=created.email)
 
+
+def authenticate_user(credentials: UserLogin, session: Session) -> UserJwtInfo:
+    """
+    Authenticates a user by email and password.
+
+    Raises:
+        InvalidCredentials: If the email doesn't exist or the password is wrong.
+        InactiveAccount: If the user account is inactive.
+    """
+    user = get_user_by_email(email=credentials.email, session=session)
+    if not user:
+        raise InvalidCredentials()
+
+    if not verify_password(
+        plain_password=credentials.password,
+        hashed_password=user.password_hash,
+    ):
+        raise InvalidCredentials()
+
+    if not user.is_active:
+        raise InactiveAccount()
+
+    return UserJwtInfo(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        is_active=user.is_active,
+    )

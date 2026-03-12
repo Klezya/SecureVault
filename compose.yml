@@ -57,6 +57,29 @@ services:
 
         - action: rebuild
           path: ./backend/uv.lock
+    
+  frontend:
+    build: ./frontend
+    container_name: securevault_frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+      - /frontend/.pnpm-store
+    
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/pnpm-lock.yaml
+        - action: rebuild
+          path: ./frontend/Dockerfile
 
     
 volumes:

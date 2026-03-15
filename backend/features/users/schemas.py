@@ -13,21 +13,18 @@ class UserCreate(SQLModel):
     """Schema for user registration."""
     username: str
     email: EmailStr
-    password: str
-
-    @field_validator('password')
-    @classmethod
-    def password_min_length(cls, v: str) -> str:
-        if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
-        return v
+    auth_hash: str
+    salt_base64: str
 
 
 class UserLogin(SQLModel):
     """Schema for user login."""
     email: EmailStr
-    password: str
+    auth_hash: str
 
+class SaltResponse(SQLModel):
+    """Response schema for salt retrieval."""
+    salt_base64: str
 
 class UserJwtInfo(SQLModel):
     """User data to embed in JWT tokens."""

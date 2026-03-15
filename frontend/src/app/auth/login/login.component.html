@@ -99,7 +99,7 @@
           [disabled]="isLoading()"
           class="mt-6 w-full rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          @if (isLoading()) { Iniciando sesión… } @else { Iniciar sesión }
+          @if (isLoading()) { {{ loadingMessage() }} } @else { Iniciar sesión }
         </button>
 
       </form>

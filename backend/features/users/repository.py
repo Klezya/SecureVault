@@ -9,13 +9,14 @@ def get_user_by_email(email: str, session: Session) -> UserTable | None:
 
 
 def create_user(
-    username: str, email: str, password_hash: str, session: Session
+    username: str, email: str, auth_hash: str, salt_base64: str, session: Session
 ) -> UserTable:
     """Inserts a new user and returns the created record."""
     user = UserTable(
         username=username,
         email=email,
-        password_hash=password_hash,
+        auth_hash=auth_hash,
+        salt_base64=salt_base64,
     )
     session.add(user)
     session.commit()

@@ -1,7 +1,7 @@
-from backend.auth.hash import hash_password, verify_password
+from backend.auth.hash import hash_password, verify_password, _fake_salt
 from sqlmodel import Session
 
-from .schemas import UserCreate, UserPublic, UserLogin, UserJwtInfo
+from .schemas import UserCreate, UserPublic, UserLogin, UserJwtInfo, SaltResponse
 from .repository import get_user_by_email, create_user
 
 
@@ -16,6 +16,13 @@ class InvalidCredentials(Exception):
 class InactiveAccount(Exception):
     """Raised when an inactive user attempts to log in."""
 
+def get_user_salt(email: str, session: Session) -> SaltResponse:
+    """Returns the salt for a given email, or a fake salt if the email doesn't exist."""
+    user = get_user_by_email(email=email, session=session)
+    if user:
+        return SaltResponse(salt_base64=user.salt_base64)
+    else:
+        return SaltResponse(salt_base64=_fake_salt(email))
 
 def register_user(user: UserCreate, session: Session) -> UserPublic:
     """
@@ -27,15 +34,16 @@ def register_user(user: UserCreate, session: Session) -> UserPublic:
     if get_user_by_email(email=user.email, session=session):
         raise EmailAlreadyTaken(user.email)
 
-    hashed = hash_password(user.password)
+    hashed = hash_password(user.auth_hash)
     created = create_user(
         username=user.username,
         email=user.email,
-        password_hash=hashed,
+        auth_hash=hashed,
+        salt_base64=user.salt_base64,
         session=session,
     )
 
-    return UserPublic(username=created.username, email=created.email)
+    return UserPublic.model_validate(created)
 
 
 def authenticate_user(credentials: UserLogin, session: Session) -> UserJwtInfo:
@@ -51,17 +59,12 @@ def authenticate_user(credentials: UserLogin, session: Session) -> UserJwtInfo:
         raise InvalidCredentials()
 
     if not verify_password(
-        plain_password=credentials.password,
-        hashed_password=user.password_hash,
+        plain_password=credentials.auth_hash,
+        hashed_password=user.auth_hash,
     ):
         raise InvalidCredentials()
 
     if not user.is_active:
         raise InactiveAccount()
 
-    return UserJwtInfo(
-        id=user.id,
-        username=user.username,
-        email=user.email,
-        is_active=user.is_active,
-    )
+    return UserJwtInfo.model_validate(user)

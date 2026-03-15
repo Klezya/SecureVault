@@ -10,5 +10,6 @@ class UserTable(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     username: str
     email: EmailStr = Field(index=True, unique=True)
-    password_hash: str
+    auth_hash: str
+    salt_base64: str
     is_active: bool = Field(default=True)

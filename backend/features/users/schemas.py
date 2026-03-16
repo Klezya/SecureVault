@@ -1,5 +1,4 @@
 from sqlmodel import SQLModel
-from uuid import UUID
 from pydantic import EmailStr, field_validator
 
 
@@ -26,9 +25,4 @@ class SaltResponse(SQLModel):
     """Response schema for salt retrieval."""
     salt_base64: str
 
-class UserJwtInfo(SQLModel):
-    """User data to embed in JWT tokens."""
-    id: UUID
-    username: str
-    email: EmailStr
-    is_active: bool
+

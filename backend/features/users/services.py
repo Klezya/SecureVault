@@ -1,7 +1,8 @@
 from backend.auth.hash import hash_password, verify_password, _fake_salt
+from backend.auth.jwt import UserJwtInfo
 from sqlmodel import Session
 
-from .schemas import UserCreate, UserPublic, UserLogin, UserJwtInfo, SaltResponse
+from .schemas import UserCreate, UserPublic, UserLogin, SaltResponse
 from .repository import get_user_by_email, create_user
 
 

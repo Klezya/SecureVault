@@ -90,7 +90,7 @@ import { VaultItemPublic } from '../core/services/vault.service';
 })
 export class VaultItemCardComponent {
   @Input({ required: true }) item!: VaultItemPublic;
-  @Output() view = new EventEmitter<void>();
+  @Output() view = new EventEmitter<VaultItemPublic>();
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
 
@@ -140,7 +140,7 @@ export class VaultItemCardComponent {
   }
 
   onView() {
-    this.view.emit();
+    this.view.emit(this.item);
   }
 
   onEdit() {

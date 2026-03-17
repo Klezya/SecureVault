@@ -108,6 +108,7 @@
       @for (item of filteredItems(); track item.id) {
         <app-vault-item-card
           [item]="item"
+          (view)="onItemView($event)"
           (delete)="onItemDelete(item.id)"
         ></app-vault-item-card>
       }
@@ -131,6 +132,30 @@
           (itemCreated)="onItemCreated($event)"
           (canceled)="closeModal()"
         ></app-vault-item-form>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- View Modal -->
+@if (showViewModal() && selectedViewItem()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="w-full max-w-md rounded-2xl border border-gray-100 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900">
+      <div class="border-b border-gray-100 px-6 py-4 dark:border-slate-800">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ selectedViewItemType() === 'password' ? 'Contraseña' : 'Nota' }}
+        </h2>
+      </div>
+
+      <div class="px-6 py-4">
+        <app-vault-item-view
+          [item]="selectedViewItem()!"
+          [itemType]="selectedViewItemType()"
+          [passwordData]="passwordViewData()"
+          [noteData]="noteViewData()"
+          (close)="closeViewModal()"
+          (edit)="onViewItemEdit()"
+        ></app-vault-item-view>
       </div>
     </div>
   </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { VaultItemFormComponent } from './vault-item-form.component';
 import { VaultItemCardComponent } from './vault-item-card.component';
+import { VaultItemViewComponent } from './vault-item-view.component';
 import { VaultService, VaultItemPublic } from '../core/services/vault.service';
 import { AuthService } from '../core/services/auth.service';
 import { CryptoService } from '../core/services/crypto.service';
@@ -10,7 +11,7 @@ import { CryptoService } from '../core/services/crypto.service';
 @Component({
   selector: 'app-vault-dashboard',
   standalone: true,
-  imports: [CommonModule, VaultItemFormComponent, VaultItemCardComponent],
+  imports: [CommonModule, VaultItemFormComponent, VaultItemCardComponent, VaultItemViewComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './vault-dashboard.component.html',
 })
@@ -23,6 +24,13 @@ export class VaultDashboardComponent implements OnInit {
   // Modal state
   showModal = signal(false);
   selectedItemType = signal<'password' | 'note'>('password');
+
+  // Modal state - View
+  showViewModal = signal(false);
+  selectedViewItem = signal<VaultItemPublic | null>(null);
+  selectedViewItemType = signal<'password' | 'note'>('password');
+  passwordViewData = signal<any>(null);
+  noteViewData = signal<any>(null);
 
   // Tab state
   activeTab = signal<'passwords' | 'notes'>('passwords');
@@ -91,6 +99,47 @@ export class VaultDashboardComponent implements OnInit {
     } catch (err) {
       console.error('Error creating item:', err);
     }
+  }
+
+  async onItemView(item: VaultItemPublic) {
+    try {
+      this.selectedViewItem.set(item);
+      this.selectedViewItemType.set(item.item_type);
+
+      // Decrypt the data
+      const plaintext = await this.cryptoService.decrypt({
+        ciphertext: item.ciphertext,
+        iv: item.iv,
+      });
+      const data = JSON.parse(plaintext);
+      
+      // Assign to the correct property based on type
+      if (item.item_type === 'password') {
+        this.passwordViewData.set(data);
+        this.noteViewData.set(null);
+      } else {
+        this.noteViewData.set(data);
+        this.passwordViewData.set(null);
+      }
+      
+      this.showViewModal.set(true);
+    } catch (err) {
+      console.error('Error viewing item:', err);
+      this.error.set('No se pudo desencriptar el elemento.');
+    }
+  }
+
+  closeViewModal() {
+    this.showViewModal.set(false);
+    this.selectedViewItem.set(null);
+    this.passwordViewData.set(null);
+    this.noteViewData.set(null);
+  }
+
+  onViewItemEdit() {
+    // TODO: Implement edit on the viewed item
+    console.log('Edit clicked on viewed item');
+    this.closeViewModal();
   }
 
   onItemDelete(itemId: string) {

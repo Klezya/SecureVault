@@ -58,6 +58,13 @@ services:
         - action: rebuild
           path: ./backend/uv.lock
     
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\")'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 6s
+    
   frontend:
     build: ./frontend
     container_name: securevault_frontend
@@ -70,7 +77,7 @@ services:
     
     depends_on:
       backend:
-        condition: service_started
+        condition: service_healthy
       db:
         condition: service_healthy
 

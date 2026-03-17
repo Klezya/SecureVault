@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { tap } from 'rxjs/operators';
 
 // ✅ Zero-knowledge — el servidor nunca ve la contraseña
 export interface RegisterPayload {
@@ -49,6 +50,28 @@ export class AuthService {
   }
 
   login(payload: LoginPayload) {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login/`, payload);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login/`, payload).pipe(
+      tap((response) => {
+        // Guardar el token y tipo en localStorage
+        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('token_type', response.token_type);
+      })
+    );
+  }
+
+  /** Obtener el token actual de la sesión */
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  /** Verificar si hay sesión activa */
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
+  /** Limpiar la sesión (logout) */
+  logout(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('token_type');
   }
 }

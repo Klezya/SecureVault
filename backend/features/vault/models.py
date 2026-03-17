@@ -1,11 +1,13 @@
 from sqlmodel import SQLModel, Field
 from uuid import UUID, uuid4
 from datetime import datetime
-from typing import Literal
+from enum import Enum
 from backend.shared import get_utc_now
 
 
-type ItemType = Literal['password', 'note']
+class ItemType(str, Enum):
+    PASSWORD = "password"
+    NOTE = "note"
 
 
 class VaultItem(SQLModel, table=True):

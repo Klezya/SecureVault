@@ -1,32 +1,137 @@
-<div class="flex flex-1 items-center justify-center px-6 py-16 min-h-[calc(100dvh-7.5rem)]">
-  <div class="w-full max-w-2xl">
-    <div class="rounded-2xl border border-gray-100 bg-white px-8 py-10 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-      <h1 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-        Hola
-      </h1>
-      <p class="mt-2 text-sm text-gray-500 dark:text-slate-400">
-        Bienvenido a tu bóveda segura. Aquí empezarás a organizar tu información.
-      </p>
+<div class="flex flex-1 flex-col px-6 py-8 min-h-[calc(100dvh-7.5rem)]">
+  <!-- Header -->
+  <div class="mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Mi Bóveda</h1>
+      <p class="mt-2 text-gray-600 dark:text-slate-400">Organiza y protege tu información sensible</p>
+    </div>
+    <button
+      type="button"
+      (click)="logout()"
+      class="inline-flex items-center rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+    >
+      🚪 Cerrar sesión
+    </button>
+  </div>
 
-      <div class="mt-6 rounded-xl border border-gray-100 bg-gray-50 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/40">
-        <p class="text-sm font-medium text-gray-900 dark:text-white">Empieza ahora</p>
-        <div class="mt-3 flex flex-wrap gap-3">
-          <a
-            href="#"
-            aria-disabled="true"
-            class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-500 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 pointer-events-none opacity-60"
-          >
-            Crear nota
-          </a>
-          <a
-            href="#"
-            aria-disabled="true"
-            class="inline-flex items-center rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-500 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 pointer-events-none opacity-60"
-          >
-            Guardar contraseña
-          </a>
+  <!-- Tabs and Actions -->
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <div class="flex gap-2 border-b border-gray-200 dark:border-slate-700">
+      <button
+        type="button"
+        (click)="switchTab('passwords')"
+        [class.border-b-2]="activeTab() === 'passwords'"
+        [class.border-emerald-500]="activeTab() === 'passwords'"
+        [class.text-emerald-600]="activeTab() === 'passwords'"
+        [class.dark:text-emerald-400]="activeTab() === 'passwords'"
+        [class.text-gray-600]="activeTab() !== 'passwords'"
+        [class.dark:text-slate-400]="activeTab() !== 'passwords'"
+        class="px-4 py-2 font-medium transition-colors"
+      >
+        🔐 Contraseñas
+      </button>
+      <button
+        type="button"
+        (click)="switchTab('notes')"
+        [class.border-b-2]="activeTab() === 'notes'"
+        [class.border-emerald-500]="activeTab() === 'notes'"
+        [class.text-emerald-600]="activeTab() === 'notes'"
+        [class.dark:text-emerald-400]="activeTab() === 'notes'"
+        [class.text-gray-600]="activeTab() !== 'notes'"
+        [class.dark:text-slate-400]="activeTab() !== 'notes'"
+        class="px-4 py-2 font-medium transition-colors"
+      >
+        📝 Notas
+      </button>
+    </div>
+
+    <button
+      type="button"
+      (click)="openModal(activeTab() === 'passwords' ? 'password' : 'note')"
+      class="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+    >
+      + Nuevo
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center py-12">
+      <div class="text-center">
+        <div class="mb-4 inline-flex items-center justify-center rounded-full bg-gray-100 p-4 dark:bg-slate-800">
+          <div class="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-emerald-600 dark:border-slate-700 dark:border-t-emerald-400"></div>
         </div>
+        <p class="text-gray-600 dark:text-slate-400">Cargando...</p>
+      </div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-900/30 dark:bg-red-900/20">
+      <p class="text-sm text-red-800 dark:text-red-400">{{ error() }}</p>
+      <button
+        type="button"
+        (click)="retryLoad()"
+        class="mt-3 inline-flex items-center rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+      >
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (isEmpty()) {
+    <div class="flex flex-1 items-center justify-center">
+      <div class="text-center">
+        <div class="mb-4 text-6xl">{{ activeTab() === 'passwords' ? '🔐' : '📝' }}</div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ activeTab() === 'passwords' ? 'Sin contraseñas guardadas' : 'Sin notas guardadas' }}
+        </h3>
+        <p class="mt-2 text-gray-600 dark:text-slate-400">
+          {{ activeTab() === 'passwords' ? 'Guarda tus contraseñas de forma segura' : 'Crea notas para recordar información importante' }}
+        </p>
+        <button
+          type="button"
+          (click)="openModal(activeTab() === 'passwords' ? 'password' : 'note')"
+          class="mt-4 inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+        >
+          + Crear ahora
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Items Grid -->
+  @if (!isEmpty() && !error()) {
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      @for (item of filteredItems(); track item.id) {
+        <app-vault-item-card
+          [item]="item"
+          (delete)="onItemDelete(item.id)"
+        ></app-vault-item-card>
+      }
+    </div>
+  }
+</div>
+
+<!-- Modal -->
+@if (showModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="w-full max-w-md rounded-2xl border border-gray-100 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900">
+      <div class="border-b border-gray-100 px-6 py-4 dark:border-slate-800">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ selectedItemType() === 'password' ? 'Guardar contraseña' : 'Crear nota' }}
+        </h2>
+      </div>
+
+      <div class="px-6 py-4">
+        <app-vault-item-form
+          [itemType]="selectedItemType()"
+          (itemCreated)="onItemCreated($event)"
+          (canceled)="closeModal()"
+        ></app-vault-item-form>
       </div>
     </div>
   </div>
-</div>
+}

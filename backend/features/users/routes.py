@@ -55,5 +55,5 @@ def auth_login(user: UserLogin, session: SessionDep):
             detail="User account is inactive, contact support",
         )
 
-    token = create_access_token(user_info.model_dump(mode='json'))
+    token = create_access_token(user_info)
     return Token(access_token=token, token_type="bearer")

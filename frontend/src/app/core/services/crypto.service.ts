@@ -17,6 +17,7 @@ export class CryptoService {
   // ── Constantes ─────────────────────────────────────────────
   private readonly PBKDF2_ITERATIONS = 600_000;
   private readonly SALT_BYTES = 32;
+  private readonly SESSION_KEY = 'vault-encryption-session';
 
   // ── Estado de sesión ───────────────────────────────────────
   private _encryptionKey: CryptoKey | null = null;
@@ -29,7 +30,37 @@ export class CryptoService {
 
   async deriveKeysForLogin(password: string, saltBase64: string): Promise<DerivedKeyBundle> {
     const salt = this._fromBase64(saltBase64);
-    return this._deriveAll(password, salt);
+    const result = await this._deriveAll(password, salt);
+    
+    // Guardar en sessionStorage para recuperar después de reload
+    sessionStorage.setItem(this.SESSION_KEY, JSON.stringify({
+      password,
+      saltBase64,
+    }));
+    
+    return result;
+  }
+
+  /** Verifica si tiene clave de encriptación disponible */
+  hasEncryptionKey(): boolean {
+    return this._encryptionKey !== null;
+  }
+
+  /** Intenta re-derivar la clave desde sessionStorage si existe */
+  async restoreEncryptionKeyIfNeeded(): Promise<boolean> {
+    if (this._encryptionKey) return true; // Ya tiene clave
+
+    const stored = sessionStorage.getItem(this.SESSION_KEY);
+    if (!stored) return false; // No hay datos guardados
+
+    try {
+      const { password, saltBase64 } = JSON.parse(stored);
+      await this.deriveKeysForLogin(password, saltBase64);
+      return true;
+    } catch (err) {
+      console.error('Error restoring encryption key:', err);
+      return false;
+    }
   }
 
   async encrypt(plaintext: string): Promise<EncryptedPayload> {
@@ -71,6 +102,7 @@ export class CryptoService {
 
   clearSession(): void {
     this._encryptionKey = null;
+    sessionStorage.removeItem(this.SESSION_KEY);
   }
 
   // ── Privado: núcleo de derivación ──────────────────────────

@@ -23,6 +23,10 @@ async def root():
     return {"status": "ok",
             "message": "Welcome to SecureVault API!"}
 
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 # Importar y registrar los routers de las características
 from backend.features.router import app_router
 

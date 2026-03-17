@@ -1,6 +1,7 @@
 from uuid import UUID
 from sqlmodel import Session
 from backend.shared import get_utc_now
+from backend.auth.jwt import UserJwtInfo
 
 from .schemas import VaultItemCreate, VaultItemUpdate, VaultItemPublic
 from .repository import get_items_by_user, get_item_by_id, create_item, update_item, delete_item
@@ -19,8 +20,8 @@ def list_items(user_id: UUID, session: Session) -> list[VaultItemPublic]:
     return items_public
 
 
-def add_item(user_id: UUID, data: VaultItemCreate, session: Session) -> VaultItemPublic:
-    item = create_item(user_id, data.model_dump(), session)
+def add_item(user_jwt: UserJwtInfo, data: VaultItemCreate, session: Session) -> VaultItemPublic:
+    item = create_item(user_jwt.id, data.model_dump(), session)
     return VaultItemPublic.model_validate(item)
 
 

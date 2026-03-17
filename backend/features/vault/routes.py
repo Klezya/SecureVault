@@ -31,7 +31,7 @@ def create_item(
     session: SessionDep,
     current_user: UserJwtInfo = CurrentUser,
 ):
-    return add_item(current_user.id, data, session)
+    return add_item(current_user, data, session)
 
 
 @router.put("/vault/items/{item_id}/", response_model=VaultItemPublic)

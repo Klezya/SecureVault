@@ -9,11 +9,11 @@ import { ThemeService } from './core/services/theme.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   host: {
-    'class': 'flex min-h-dvh flex-col bg-white transition-colors duration-200 dark:bg-slate-950',
+    'class': 'flex min-h-dvh flex-col transition-colors duration-200',
   },
   template: `
     <app-header />
-    <main class="flex flex-1 flex-col">
+    <main class="relative flex flex-1 flex-col">
       <router-outlet />
     </main>
     <app-footer />

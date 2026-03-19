@@ -17,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const isPublicUrl = PUBLIC_URLS.some(url => req.url.includes(url));
 
-  // ✅ Siempre enviar cookies
+  // Siempre enviar cookies
   req = req.clone({
     withCredentials: true,
   });

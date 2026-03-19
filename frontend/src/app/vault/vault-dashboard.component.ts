@@ -8,7 +8,6 @@ import { CryptoService } from '../core/services/crypto.service';
 
 @Component({
   selector: 'app-vault-dashboard',
-  standalone: true,
   imports: [CommonModule, VaultItemFormComponent, VaultItemCardComponent, VaultItemViewComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './vault-dashboard.component.html',

@@ -23,15 +23,13 @@ interface NoteData {
 
 @Component({
   selector: 'app-vault-item-form',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-      <!-- Password Form -->
       @if (itemType === 'password') {
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-900 dark:text-white">
+          <label for="username" class="block text-sm font-semibold" style="color: var(--sv-text);">
             Usuario
           </label>
           <input
@@ -39,12 +37,12 @@ interface NoteData {
             type="text"
             formControlName="username"
             placeholder="ej: john_doe"
-            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            class="sv-input"
           />
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white">
+          <label for="email" class="block text-sm font-semibold" style="color: var(--sv-text);">
             Correo
           </label>
           <input
@@ -52,12 +50,12 @@ interface NoteData {
             type="email"
             formControlName="email"
             placeholder="ej: john@example.com"
-            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            class="sv-input"
           />
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-900 dark:text-white">
+          <label for="password" class="block text-sm font-semibold" style="color: var(--sv-text);">
             Contraseña
           </label>
           <input
@@ -65,28 +63,27 @@ interface NoteData {
             type="password"
             formControlName="password"
             placeholder="Contraseña"
-            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            class="sv-input"
           />
         </div>
 
         <div>
-          <label for="notes" class="block text-sm font-medium text-gray-900 dark:text-white">
+          <label for="notes" class="block text-sm font-semibold" style="color: var(--sv-text);">
             Notas
           </label>
           <textarea
             id="notes"
             formControlName="notes"
             placeholder="Notas adicionales (opcional)"
-            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            class="sv-input"
             rows="3"
           ></textarea>
         </div>
       }
 
-      <!-- Note Form -->
       @if (itemType === 'note') {
         <div>
-          <label for="title" class="block text-sm font-medium text-gray-900 dark:text-white">
+          <label for="title" class="block text-sm font-semibold" style="color: var(--sv-text);">
             Título
           </label>
           <input
@@ -94,37 +91,35 @@ interface NoteData {
             type="text"
             formControlName="title"
             placeholder="ej: Notas de trabajo"
-            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            class="sv-input"
           />
         </div>
 
         <div>
-          <label for="content" class="block text-sm font-medium text-gray-900 dark:text-white">
+          <label for="content" class="block text-sm font-semibold" style="color: var(--sv-text);">
             Contenido
           </label>
           <textarea
             id="content"
             formControlName="content"
             placeholder="Escribe tu nota aquí..."
-            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            class="sv-input"
             rows="6"
           ></textarea>
         </div>
       }
 
-      <!-- Error message -->
       @if (error()) {
-        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-800 dark:bg-red-900/20 dark:text-red-200">
+        <div class="rounded-xl border px-4 py-3 text-sm" style="border-color: color-mix(in oklab, var(--sv-danger) 40%, var(--sv-border)); color: var(--sv-danger); background: color-mix(in oklab, var(--sv-danger) 10%, transparent);">
           {{ error() }}
         </div>
       }
 
-      <!-- Buttons -->
-      <div class="flex gap-3 pt-4">
+      <div class="flex flex-col gap-2 pt-4 sm:flex-row sm:gap-3">
         <button
           type="button"
           (click)="onCancel()"
-          class="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          class="sv-btn sv-btn-secondary flex-1"
         >
           Cancelar
         </button>
@@ -132,7 +127,7 @@ interface NoteData {
         <button
           type="submit"
           [disabled]="isLoading() || !form.valid"
-          class="flex-1 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="sv-btn sv-btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-50"
         >
           @if (isLoading()) {
             Creando...

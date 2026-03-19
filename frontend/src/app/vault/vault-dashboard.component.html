@@ -1,103 +1,104 @@
-<div class="flex flex-1 flex-col px-6 py-8 min-h-[calc(100dvh-7.5rem)]">
-  <!-- Header -->
-  <div class="mb-8">
-    <div>
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Mi Bóveda</h1>
-      <p class="mt-2 text-gray-600 dark:text-slate-400">Organiza y protege tu información sensible</p>
-    </div>
+<section class="sv-page min-h-[calc(100dvh-8.5rem)]">
+  <div class="mb-7 sm:mb-8">
+    <h1 class="text-4xl sm:text-5xl" style="color: var(--sv-text);">Mi Bóveda</h1>
+    <p class="sv-muted mt-2 text-sm sm:text-base">Organiza y protege tu información sensible en un espacio cifrado.</p>
   </div>
 
-  <!-- Tabs and Actions -->
-  <div class="mb-6 flex items-center justify-between gap-4">
-    <div class="flex gap-2 border-b border-gray-200 dark:border-slate-700">
+  <div class="sv-surface mb-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+    <div class="flex flex-wrap items-center gap-2">
       <button
         type="button"
         (click)="switchTab('passwords')"
-        [class.border-b-2]="activeTab() === 'passwords'"
-        [class.border-emerald-500]="activeTab() === 'passwords'"
-        [class.text-emerald-600]="activeTab() === 'passwords'"
-        [class.dark:text-emerald-400]="activeTab() === 'passwords'"
-        [class.text-gray-600]="activeTab() !== 'passwords'"
-        [class.dark:text-slate-400]="activeTab() !== 'passwords'"
-        class="px-4 py-2 font-medium transition-colors"
+        class="sv-btn px-3"
+        [class.sv-btn-primary]="activeTab() === 'passwords'"
+        [class.sv-btn-secondary]="activeTab() !== 'passwords'"
       >
-        🔐 Contraseñas
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" class="size-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+        </svg>
+        Contraseñas
       </button>
       <button
         type="button"
         (click)="switchTab('notes')"
-        [class.border-b-2]="activeTab() === 'notes'"
-        [class.border-emerald-500]="activeTab() === 'notes'"
-        [class.text-emerald-600]="activeTab() === 'notes'"
-        [class.dark:text-emerald-400]="activeTab() === 'notes'"
-        [class.text-gray-600]="activeTab() !== 'notes'"
-        [class.dark:text-slate-400]="activeTab() !== 'notes'"
-        class="px-4 py-2 font-medium transition-colors"
+        class="sv-btn px-3"
+        [class.sv-btn-primary]="activeTab() === 'notes'"
+        [class.sv-btn-secondary]="activeTab() !== 'notes'"
       >
-        📝 Notas
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" class="size-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+        </svg>
+        Notas
       </button>
     </div>
 
     <button
       type="button"
       (click)="openModal(activeTab() === 'passwords' ? 'password' : 'note')"
-      class="inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+      class="sv-btn sv-btn-primary w-full sm:w-auto"
     >
-      + Nuevo
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      Nuevo elemento
     </button>
   </div>
 
-  <!-- Loading State -->
   @if (loading()) {
-    <div class="flex items-center justify-center py-12">
+    <div class="sv-surface flex items-center justify-center py-14">
       <div class="text-center">
-        <div class="mb-4 inline-flex items-center justify-center rounded-full bg-gray-100 p-4 dark:bg-slate-800">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-emerald-600 dark:border-slate-700 dark:border-t-emerald-400"></div>
-        </div>
-        <p class="text-gray-600 dark:text-slate-400">Cargando...</p>
+        <div class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4" style="border-color: color-mix(in oklab, var(--sv-primary) 18%, var(--sv-border)); border-top-color: var(--sv-primary);"></div>
+        <p class="sv-muted">Cargando bóveda...</p>
       </div>
     </div>
   }
 
-  <!-- Error State -->
   @if (error()) {
-    <div class="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-900/30 dark:bg-red-900/20">
-      <p class="text-sm text-red-800 dark:text-red-400">{{ error() }}</p>
+    <div class="rounded-2xl border p-4" style="border-color: color-mix(in oklab, var(--sv-danger) 40%, var(--sv-border)); background: color-mix(in oklab, var(--sv-danger) 10%, transparent);">
+      <p class="text-sm" style="color: var(--sv-danger);">{{ error() }}</p>
       <button
         type="button"
         (click)="retryLoad()"
-        class="mt-3 inline-flex items-center rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+        class="sv-btn sv-btn-danger mt-3"
       >
         Reintentar
       </button>
     </div>
   }
 
-  <!-- Empty State -->
   @if (isEmpty()) {
-    <div class="flex flex-1 items-center justify-center">
-      <div class="text-center">
-        <div class="mb-4 text-6xl">{{ activeTab() === 'passwords' ? '🔐' : '📝' }}</div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+    <div class="sv-surface flex items-center justify-center py-14">
+      <div class="mx-auto max-w-md px-4 text-center">
+        <div class="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl" style="background: color-mix(in oklab, var(--sv-primary) 14%, transparent); border: 1px solid color-mix(in oklab, var(--sv-primary) 30%, var(--sv-border));">
+          @if (activeTab() === 'passwords') {
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8" style="color: var(--sv-primary);">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8" style="color: var(--sv-primary);">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+          }
+        </div>
+        <h2 class="text-2xl" style="color: var(--sv-text);">
           {{ activeTab() === 'passwords' ? 'Sin contraseñas guardadas' : 'Sin notas guardadas' }}
-        </h3>
-        <p class="mt-2 text-gray-600 dark:text-slate-400">
-          {{ activeTab() === 'passwords' ? 'Guarda tus contraseñas de forma segura' : 'Crea notas para recordar información importante' }}
+        </h2>
+        <p class="sv-muted mt-2 text-sm sm:text-base">
+          {{ activeTab() === 'passwords' ? 'Guarda tus credenciales de forma segura y organizada.' : 'Crea notas cifradas para recordar información sensible.' }}
         </p>
         <button
           type="button"
           (click)="openModal(activeTab() === 'passwords' ? 'password' : 'note')"
-          class="mt-4 inline-flex items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+          class="sv-btn sv-btn-primary mt-6"
         >
-          + Crear ahora
+          Crear ahora
         </button>
       </div>
     </div>
   }
 
-  <!-- Items Grid -->
   @if (!isEmpty() && !error()) {
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       @for (item of filteredItems(); track item.id || $index) {
         <app-vault-item-card
           [item]="item"
@@ -107,19 +108,23 @@
       }
     </div>
   }
-</div>
+</section>
 
-<!-- Modal -->
 @if (showModal()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-    <div class="w-full max-w-md rounded-2xl border border-gray-100 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900">
-      <div class="border-b border-gray-100 px-6 py-4 dark:border-slate-800">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" style="background-color: color-mix(in oklab, #000 42%, transparent); backdrop-filter: blur(6px);">
+    <div class="sv-card w-full max-w-lg overflow-hidden">
+      <div class="flex items-center justify-between border-b px-5 py-4 sm:px-6" style="border-color: var(--sv-border); background-color: color-mix(in oklab, var(--sv-surface) 85%, transparent);">
+        <h2 class="text-xl" style="color: var(--sv-text);">
           {{ selectedItemType() === 'password' ? 'Guardar contraseña' : 'Crear nota' }}
         </h2>
+        <button (click)="closeModal()" class="sv-btn sv-btn-secondary px-3" aria-label="Cerrar ventana de creación">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      <div class="px-6 py-4">
+      <div class="px-5 py-5 sm:px-6">
         <app-vault-item-form
           [itemType]="selectedItemType()"
           (itemCreated)="onItemCreated($event)"
@@ -130,17 +135,35 @@
   </div>
 }
 
-<!-- View Modal -->
 @if (showViewModal() && selectedViewItem()) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-    <div class="w-full max-w-md rounded-2xl border border-gray-100 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900">
-      <div class="border-b border-gray-100 px-6 py-4 dark:border-slate-800">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ selectedViewItemType() === 'password' ? 'Contraseña' : 'Nota' }}
-        </h2>
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" style="background-color: color-mix(in oklab, #000 42%, transparent); backdrop-filter: blur(6px);">
+    <div class="sv-card w-full max-w-lg overflow-hidden">
+      <div class="flex items-center justify-between border-b px-5 py-4 sm:px-6" style="border-color: var(--sv-border); background-color: color-mix(in oklab, var(--sv-surface) 85%, transparent);">
+        <div class="flex items-center gap-3">
+          <div class="flex size-8 items-center justify-center rounded-xl" style="background: color-mix(in oklab, var(--sv-primary) 16%, transparent); border: 1px solid color-mix(in oklab, var(--sv-primary) 32%, var(--sv-border)); color: var(--sv-primary);">
+            @if (selectedViewItemType() === 'password') {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+              </svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
+            }
+          </div>
+          <h2 class="text-xl" style="color: var(--sv-text);">
+            {{ selectedViewItemType() === 'password' ? 'Detalles de contraseña' : 'Detalles de nota' }}
+          </h2>
+        </div>
+
+        <button (click)="closeViewModal()" class="sv-btn sv-btn-secondary px-3" aria-label="Cerrar vista">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      <div class="px-6 py-4">
+      <div class="px-5 py-5 sm:px-6">
         <app-vault-item-view
           [item]="selectedViewItem()!"
           [itemType]="selectedViewItemType()"

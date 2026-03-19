@@ -1,14 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 /* Class-based dark mode for Tailwind v4 */
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+}
+
 @layer base {
+  :root {
+    --sv-bg: #f4f0e8;
+    --sv-bg-alt: #ece5d9;
+    --sv-surface: #fdfaf3;
+    --sv-surface-strong: #ffffff;
+    --sv-border: #d8cebd;
+    --sv-text: #251f17;
+    --sv-text-muted: #605444;
+    --sv-primary: #2f6a4f;
+    --sv-primary-strong: #204d39;
+    --sv-danger: #8f2930;
+    --sv-focus: #2f6a4f;
+  }
+
+  .dark {
+    --sv-bg: #161410;
+    --sv-bg-alt: #1f1a14;
+    --sv-surface: #27221a;
+    --sv-surface-strong: #2f2920;
+    --sv-border: #4a4033;
+    --sv-text: #f3ebdc;
+    --sv-text-muted: #c5b79e;
+    --sv-primary: #7ac8a0;
+    --sv-primary-strong: #95d8b6;
+    --sv-danger: #f09ea3;
+    --sv-focus: #95d8b6;
+  }
+
   html {
     color-scheme: light;
   }
 
   html.dark {
     color-scheme: dark;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--sv-bg);
+    background-image:
+      radial-gradient(circle at 12% -4%, color-mix(in oklab, var(--sv-primary) 12%, transparent) 0%, transparent 40%),
+      radial-gradient(circle at 92% 10%, color-mix(in oklab, var(--sv-primary) 10%, transparent) 0%, transparent 45%),
+      linear-gradient(180deg, var(--sv-bg) 0%, var(--sv-bg-alt) 100%);
+    color: var(--sv-text);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  a,
+  button,
+  input,
+  textarea {
+    outline-color: var(--sv-focus);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--sv-primary) 30%, transparent);
+    color: var(--sv-text);
+  }
+}
+
+@layer components {
+  .sv-page {
+    @apply mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8;
+  }
+
+  .sv-surface {
+    background-color: color-mix(in oklab, var(--sv-surface) 92%, transparent);
+    border: 1px solid var(--sv-border);
+    @apply rounded-2xl shadow-sm backdrop-blur-sm;
+  }
+
+  .sv-card {
+    background-color: var(--sv-surface-strong);
+    border: 1px solid var(--sv-border);
+    @apply rounded-2xl shadow-sm;
+  }
+
+  .sv-input {
+    background-color: var(--sv-surface-strong);
+    color: var(--sv-text);
+    border: 1px solid var(--sv-border);
+    @apply mt-1.5 block w-full rounded-xl px-3.5 py-2.5 text-sm transition-colors placeholder:opacity-75;
+  }
+
+  .sv-input:focus {
+    border-color: var(--sv-primary);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--sv-primary) 18%, transparent);
+    outline: none;
+  }
+
+  .sv-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+
+  .sv-btn-primary {
+    background-color: var(--sv-primary);
+    color: #fffefb;
+  }
+
+  .sv-btn-primary:hover {
+    background-color: var(--sv-primary-strong);
+  }
+
+  .sv-btn-primary:focus-visible {
+    outline-color: var(--sv-focus);
+  }
+
+  .sv-btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--sv-border);
+    color: var(--sv-text);
+  }
+
+  .sv-btn-secondary:hover {
+    background-color: color-mix(in oklab, var(--sv-primary) 10%, transparent);
+  }
+
+  .sv-btn-danger {
+    background-color: transparent;
+    border: 1px solid color-mix(in oklab, var(--sv-danger) 40%, var(--sv-border));
+    color: var(--sv-danger);
+  }
+
+  .sv-btn-danger:hover {
+    background-color: color-mix(in oklab, var(--sv-danger) 14%, transparent);
+  }
+
+  .sv-pill {
+    border: 1px solid var(--sv-border);
+    color: var(--sv-text-muted);
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold tracking-wide;
+  }
+
+  .sv-muted {
+    color: var(--sv-text-muted);
   }
 }

@@ -8,24 +8,23 @@ import { AuthService } from '../../core/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
-    <header
-      class="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80"
-    >
-      <div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-
-        <!-- Logo -->
+    <header class="sticky top-0 z-50 border-b backdrop-blur-md" style="border-color: var(--sv-border); background: color-mix(in oklab, var(--sv-surface) 80%, transparent);">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <a
           routerLink="/"
-          class="flex items-center gap-2.5 text-gray-900 transition-opacity hover:opacity-70 dark:text-white"
+          class="flex items-center gap-2.5 transition-opacity hover:opacity-80"
+          style="color: var(--sv-text);"
           aria-label="SecureVault — ir al inicio"
         >
           <div
-            class="flex size-8 items-center justify-center rounded-lg bg-emerald-500/10 ring-1 ring-emerald-500/30"
+            class="flex size-9 items-center justify-center rounded-xl"
+            style="background: color-mix(in oklab, var(--sv-primary) 15%, transparent); border: 1px solid color-mix(in oklab, var(--sv-primary) 40%, var(--sv-border));"
             aria-hidden="true"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="size-4 text-emerald-500"
+              class="size-4"
+              style="color: var(--sv-primary);"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -38,15 +37,14 @@ import { AuthService } from '../../core/services/auth.service';
               />
             </svg>
           </div>
-          <span class="text-sm font-semibold tracking-tight">SecureVault</span>
+          <span class="text-base font-bold tracking-tight">SecureVault</span>
         </a>
 
-        <!-- Vault button - visible only when authenticated -->
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center justify-end gap-2">
           @if (auth.isAuthenticated()) {
             <a
               routerLink="/vault"
-              class="px-4 py-2 text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+              class="sv-btn sv-btn-secondary"
               aria-label="Ir a Vault — mis contraseñas"
             >
               Vault
@@ -54,59 +52,56 @@ import { AuthService } from '../../core/services/auth.service';
             <button
               type="button"
               (click)="logout()"
-              class="px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+              class="sv-btn sv-btn-danger"
               aria-label="Cerrar sesión"
             >
               Cerrar sesión
             </button>
           }
 
-          <!-- Theme toggle -->
           <button
-          type="button"
-          (click)="theme.toggle()"
-          [attr.aria-label]="theme.isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
-          [attr.aria-pressed]="theme.isDark()"
-          class="flex size-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 dark:text-slate-400 dark:hover:bg-slate-800"
-        >
-          @if (theme.isDark()) {
-            <!-- Sun -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="size-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.75"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-              />
-            </svg>
-          } @else {
-            <!-- Moon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="size-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.75"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-              />
-            </svg>
-          }
-        </button>
+            type="button"
+            (click)="theme.toggle()"
+            [attr.aria-label]="theme.isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+            [attr.aria-pressed]="theme.isDark()"
+            class="sv-btn sv-btn-secondary px-3"
+          >
+            @if (theme.isDark()) {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="size-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.75"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                />
+              </svg>
+            } @else {
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="size-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.75"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+                />
+              </svg>
+            }
+            <span class="sr-only">Cambiar tema</span>
+          </button>
         </div>
-
       </div>
     </header>
   `,

@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { tap, finalize } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-// ✅ Zero-knowledge — el servidor nunca ve la contraseña
+  // Zero-knowledge — el servidor nunca ve la contraseña
 export interface RegisterPayload {
   username: string;
   email: string;

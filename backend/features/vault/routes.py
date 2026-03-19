@@ -34,7 +34,7 @@ def create_item(
     return add_item(current_user, data, session)
 
 
-@router.put("/vault/items/{item_id}/", response_model=VaultItemPublic)
+@router.patch("/vault/items/{item_id}/", response_model=VaultItemPublic)
 def update_item(
     item_id: UUID,
     data: VaultItemUpdate,

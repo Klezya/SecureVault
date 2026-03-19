@@ -7,6 +7,10 @@ def get_user_by_email(email: str, session: Session) -> UserTable | None:
     statement = select(UserTable).where(UserTable.email == email)
     return session.exec(statement).first()
 
+def get_user_by_id(user_id: str, session: Session) -> UserTable | None:
+    """Retrieves a user by ID, or None if not found."""
+    statement = select(UserTable).where(UserTable.id == user_id)
+    return session.exec(statement).first()
 
 def create_user(
     username: str, email: str, auth_hash: str, salt_base64: str, session: Session

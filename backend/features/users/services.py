@@ -3,7 +3,7 @@ from backend.auth.jwt import UserJwtInfo
 from sqlmodel import Session
 
 from .schemas import UserCreate, UserPublic, UserLogin, SaltResponse
-from .repository import get_user_by_email, create_user
+from .repository import get_user_by_email, create_user, get_user_by_id
 
 
 class EmailAlreadyTaken(Exception):
@@ -16,6 +16,16 @@ class InvalidCredentials(Exception):
 
 class InactiveAccount(Exception):
     """Raised when an inactive user attempts to log in."""
+
+class UserNotFound(Exception):
+    """Raised when a user is not found in the database."""
+
+def get_user_jwtinfo(user_id: str, session: Session) -> UserJwtInfo:
+    """Retrieves a user by ID, or None if not found."""
+    user = get_user_by_id(user_id=user_id, session=session)
+    if user:
+        return UserJwtInfo.model_validate(user)
+    raise UserNotFound()
 
 def get_user_salt(email: str, session: Session) -> SaltResponse:
     """Returns the salt for a given email, or a fake salt if the email doesn't exist."""
@@ -46,7 +56,6 @@ def register_user(user: UserCreate, session: Session) -> UserPublic:
 
     return UserPublic.model_validate(created)
 
-
 def authenticate_user(credentials: UserLogin, session: Session) -> UserJwtInfo:
     """
     Authenticates a user by email and password.
@@ -69,3 +78,4 @@ def authenticate_user(credentials: UserLogin, session: Session) -> UserJwtInfo:
         raise InactiveAccount()
 
     return UserJwtInfo.model_validate(user)
+

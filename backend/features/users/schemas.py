@@ -7,7 +7,6 @@ class UserPublic(SQLModel):
     username: str
     email: EmailStr
 
-
 class UserCreate(SQLModel):
     """Schema for user registration."""
     username: str
@@ -24,5 +23,6 @@ class UserLogin(SQLModel):
 class SaltResponse(SQLModel):
     """Response schema for salt retrieval."""
     salt_base64: str
+
 
 

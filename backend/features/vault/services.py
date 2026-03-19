@@ -48,7 +48,6 @@ def _get_owned_item(item_id: UUID, user_id: UUID, session: Session) -> ...:
     Separar ItemNotFound de NotOwner permite devolver 404 en ambos casos
     desde la ruta — no le decimos al cliente si el ítem existe pero no es suyo.
     """
-    from .models import VaultItem
     item = get_item_by_id(item_id, session)
     if not item:
         raise ItemNotFound()

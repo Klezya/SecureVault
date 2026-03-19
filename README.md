@@ -1,92 +1,115 @@
 <div align="center">
 
-# 🔐 SecureVault
+# SecureVault
 
-**A deployable web vault for passwords and private notes, built around modern security practices.**
+Learning project focused on AES-256 client-side encryption, zero-knowledge data handling, and modern full-stack security practices.
 
 ![Status](https://img.shields.io/badge/status-in%20development-orange?style=for-the-badge)
 ![Angular](https://img.shields.io/badge/Angular-21-DD0031?style=for-the-badge&logo=angular)
-![FastAPI](https://img.shields.io/badge/FastAPI-latest-009688?style=for-the-badge&logo=fastapi)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.135+-009688?style=for-the-badge&logo=fastapi)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?style=for-the-badge&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker)
 
 </div>
 
----
-
 > [!WARNING]
-> **🚧 Work in Progress** — This project is actively under development. Core infrastructure is in place, but several features are not yet implemented. Expect breaking changes.
+> This is a learning project and is NOT production-ready.
+> Do not use it to store real secrets. Security hardening, threat modeling, and audits are incomplete.
 
----
+## Project Goal
 
-## 📖 About
+SecureVault is a portfolio/learning project that demonstrates how to build a web vault with end-to-end encrypted payload handling using Angular + FastAPI + PostgreSQL.
 
-SecureVault is a full-stack portfolio project focused on experimenting with web security concepts: **password hashing**, **JWT authentication**, and **handling sensitive data safely**. It provides a simple interface for storing passwords and private notes, using a modern Angular + FastAPI stack.
+Primary objective:
 
-This is not meant to replace production-grade password managers — it's an intentional deep-dive into the practices that make them secure.
+- Learn and implement AES-256-based client-side encryption workflows in a realistic full-stack app.
 
----
+## Audience
 
-## ✨ Features
+This README is written for recruiters and technical reviewers who want to quickly evaluate the architecture, security model, and implementation maturity.
 
-### ✅ Implemented
-- User registration with **Argon2** password hashing
-- PostgreSQL schema with UUID primary keys
-- Dockerized environment with hot-reload for development
-- Angular 21 standalone component architecture
-- Lazy-loaded routing for vault sections
+## Current Status
 
-### 🔜 Coming Soon
-- JWT-based login & session management
-- Password vault (CRUD)
-- Private notes (CRUD)
-- Encryption of stored secrets
-- Responsive UI with Tailwind CSS
+Implemented:
 
----
+- User registration and login.
+- Access token (JWT) + refresh token session flow.
+- Refresh token rotation with HttpOnly cookie.
+- Vault item CRUD for authenticated users.
+- Route guard and HTTP interceptor on frontend.
+- Docker Compose local environment with live development flow (`docker compose up --watch`).
 
-## 🛠️ Tech Stack
+Needs improvement:
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Angular 21, TypeScript, Tailwind CSS 4, Signals |
-| **Backend** | FastAPI, SQLModel, PyJWT, pwdlib (Argon2) |
-| **Database** | PostgreSQL 18 |
-| **Infrastructure** | Docker, Docker Compose, uv |
-| **Testing** | Vitest |
+- Backend automated tests.
+- Additional production hardening.
+- More operational/security documentation.
 
----
+## Tech Stack
 
-## 🏗️ Project Structure
+| Layer          | Technology                                                  |
+| -------------- | ----------------------------------------------------------- |
+| Frontend       | Angular 21, TypeScript, Signals, RxJS, Tailwind CSS 4       |
+| Backend        | FastAPI, SQLModel, PyJWT / python-jose, pwdlib (Argon2), uv |
+| Database       | PostgreSQL 18                                               |
+| Infrastructure | Docker, Docker Compose                                      |
+| Testing        | Vitest (frontend)                                           |
 
-```
+## Security Model (Zero-Knowledge)
+
+Design target:
+
+- The backend should never process or persist plaintext secret content.
+- Secret vault content is encrypted in the client before network transmission.
+- The API stores encrypted payloads (ciphertext + IV) and metadata only.
+
+Scope note:
+
+- User identity/authentication fields still exist in backend models (for obvious account/session needs).
+
+## Architecture Summary
+
+### Frontend
+
+- Angular SPA with standalone components.
+- Lazy routes for home, login, register, and vault.
+- Signal-based authentication state management.
+- Crypto service for key derivation and AES-GCM encryption/decryption in the browser.
+
+### Backend
+
+- FastAPI REST API under `/api/v1`.
+- Feature modules: users/auth and vault items.
+- PostgreSQL persistence using SQLModel.
+- CORS enabled for local frontend origin (`http://localhost:4200`).
+
+## Project Structure
+
+```text
 SecureVault/
-├── frontend/           # Angular 21 SPA
+├── backend/
+│   ├── auth/
+│   ├── core/
+│   ├── features/
+│   │   ├── users/
+│   │   └── vault/
+│   └── main.py
+├── frontend/
 │   └── src/app/
-│       ├── auth/       # Login & Register
-│       ├── home/       # Dashboard
-│       └── features/
-│           ├── passwords/
-│           └── notes/
-│
-├── backend/            # FastAPI REST API
-│   ├── core/           # DB engine & settings
-│   ├── auth/           # Hashing utilities
-│   └── features/
-│       ├── users/
-│       ├── passwords/
-│       └── notes/
-│
+│       ├── auth/
+│       ├── core/
+│       ├── home/
+│       ├── shared/
+│       └── vault/
 └── compose.yml
 ```
 
----
+## Run Locally (Docker)
 
-## 🚀 Running Locally
+Requirements:
 
-### Prerequisites
-
-- [Docker](https://www.docker.com/) & Docker Compose
+- Docker
+- Docker Compose v2
 
 ```bash
 git clone https://github.com/Klezya/SecureVault.git
@@ -96,38 +119,111 @@ cd SecureVault
 git checkout development
 
 cp backend/.env.example backend/.env
-
 docker compose up --watch
 ```
 
-| Service | URL |
-|---|---|
-| API | http://localhost:8000 |
-| API Docs (Swagger) | http://localhost:8000/docs |
+Exposed services:
 
----
+| Service     | URL                         |
+| ----------- | --------------------------- |
+| Frontend    | http://localhost:4200       |
+| Backend API | http://localhost:8000       |
+| Swagger     | http://localhost:8000/docs  |
+| ReDoc       | http://localhost:8000/redoc |
+| PostgreSQL  | localhost:5432              |
 
-## 🔐 Security Concepts Explored
+## Backend Environment Variables
 
-- **Argon2 hashing** via `pwdlib` — recommended algorithm from the Password Hashing Competition
-- **JWT** for stateless, signed session tokens
-- **Encrypted storage** for secrets (planned — AES-256)
-- Docker container running as a **non-root user**
+`backend/.env.example` includes:
 
----
+```env
+DATABASE_URL=postgresql://securevault_admin:securevault_password@db:5432/securevault_db
+SECRET_KEY=<your-secret-key>
+```
 
-## 📡 API Endpoints
+## API Snapshot
 
-| Method | Endpoint | Description | Status |
-|---|---|---|---|
-| `GET` | `/` | Health check | ✅ |
-| `POST` | `/api/v1/auth/register/` | Register a new user | ✅ |
-| `POST` | `/api/v1/auth/login/` | Login & get JWT | 🔜 |
-| `GET/POST` | `/api/v1/passwords/` | Password vault | 🔜 |
-| `GET/POST` | `/api/v1/notes/` | Notes | 🔜 |
+Local base URL: `http://localhost:8000/api/v1`
 
----
+### Health
 
-## 📄 License
+| Method | Endpoint  | Description      |
+| ------ | --------- | ---------------- |
+| GET    | `/`       | Basic API status |
+| GET    | `/health` | Healthcheck      |
 
-[MIT](./LICENSE)
+### Auth
+
+| Method | Endpoint                | Description                                        |
+| ------ | ----------------------- | -------------------------------------------------- |
+| GET    | `/auth/salt/?email=...` | Fetches stored salt for login derivation           |
+| POST   | `/auth/register/`       | Registers user                                     |
+| POST   | `/auth/login/`          | Logs in and returns access token                   |
+| POST   | `/auth/refresh/`        | Rotates refresh token and returns new access token |
+| POST   | `/auth/logout/`         | Revokes refresh token and clears session           |
+
+### Vault
+
+| Method | Endpoint                  | Description                      |
+| ------ | ------------------------- | -------------------------------- |
+| GET    | `/vault/items/`           | Lists current user's vault items |
+| POST   | `/vault/items/`           | Creates vault item               |
+| PATCH  | `/vault/items/{item_id}/` | Updates item                     |
+| DELETE | `/vault/items/{item_id}/` | Deletes item                     |
+
+Vault endpoints require Bearer authentication.
+
+## Quick API Examples
+
+Register:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/register/ \
+	-H "Content-Type: application/json" \
+	-d '{
+		"username": "alice",
+		"email": "alice@example.com",
+		"auth_hash": "<derived-auth-hash>",
+		"salt_base64": "<salt-base64>"
+	}'
+```
+
+Login:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/login/ \
+	-H "Content-Type: application/json" \
+	-d '{
+		"email": "alice@example.com",
+		"auth_hash": "<derived-auth-hash>"
+	}'
+```
+
+Create encrypted vault item:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/vault/items/ \
+	-H "Authorization: Bearer <access_token>" \
+	-H "Content-Type: application/json" \
+	-d '{
+		"item_type": "password",
+		"ciphertext": "<base64-ciphertext>",
+		"iv": "<base64-iv>"
+	}'
+```
+
+## Milestones
+
+- M1: Stable auth flow (register/login/refresh/logout) with token rotation.
+- M2: Stable encrypted vault CRUD for passwords and notes.
+- M3: Improve backend test coverage and CI checks.
+- M4: Security hardening pass and documentation update.
+
+## Production Disclaimer
+
+Even with zero-knowledge goals, this repository is currently for learning purposes only.
+It has not undergone formal security review, penetration testing, or operational hardening required for production use.
+
+## License
+
+MIT. See `LICENSE`.

@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { tap } from 'rxjs/operators';
+import { tap, finalize } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 // ✅ Zero-knowledge — el servidor nunca ve la contraseña
 export interface RegisterPayload {
@@ -35,7 +37,12 @@ export interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
   private readonly apiUrl = environment.apiUrl;
+
+  /** Subject para coordinar refreshes simultáneos (evita múltiples refresh calls) */
+  private _refreshSubject = new BehaviorSubject<boolean>(false);
+  public isRefreshing$ = this._refreshSubject.asObservable();
 
   register(payload: RegisterPayload) {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register/`, payload);
@@ -59,6 +66,26 @@ export class AuthService {
     );
   }
 
+  /** Renovar el access token usando el refresh token (en la cookie) */
+  refresh() {
+    // Marcar que estamos refrescando
+    this._refreshSubject.next(true);
+
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/auth/refresh/`,
+      {}
+    ).pipe(
+      tap((response) => {
+        localStorage.setItem('access_token', response.access_token);
+        // El refresh_token se actualiza automáticamente en la cookie
+      }),
+      finalize(() => {
+        // Marcar que terminó el refresh
+        this._refreshSubject.next(false);
+      })
+    );
+  }
+
   /** Obtener el token actual de la sesión */
   getToken(): string | null {
     return localStorage.getItem('access_token');
@@ -69,9 +96,19 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  /** Limpiar la sesión (logout) */
-  logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('token_type');
+  /** Logout con notificación al servidor y limpieza local */
+  logout() {
+    return this.http.post(
+      `${this.apiUrl}/auth/logout/`,
+      {}
+    ).pipe(
+      finalize(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('token_type');
+        this.router.navigate(['/login'], {
+          queryParams: { reason: 'session_expired' }
+        });
+      })
+    );
   }
 }

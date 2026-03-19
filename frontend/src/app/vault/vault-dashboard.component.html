@@ -105,7 +105,7 @@
   <!-- Items Grid -->
   @if (!isEmpty() && !error()) {
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      @for (item of filteredItems(); track item.id) {
+      @for (item of filteredItems(); track item.id || $index) {
         <app-vault-item-card
           [item]="item"
           (view)="onItemView($event)"

@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -16,11 +16,12 @@ import { CryptoService } from '../../core/services/crypto.service';
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly cryptoService = inject(CryptoService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly isLoading = signal(false);
   readonly loadingMessage = signal('Iniciando sesión…');
@@ -35,6 +36,15 @@ export class LoginComponent {
 
   get email() { return this.form.get('email')!; }
   get password() { return this.form.get('password')!; }
+
+  ngOnInit() {
+    // Detectar si la sesión expiró
+    this.route.queryParams.subscribe(params => {
+      if (params['reason'] === 'session_expired') {
+        this.errorMessage.set('Tu sesión expiró. Por favor, inicia sesión nuevamente.');
+      }
+    });
+  }
 
   async onSubmit(): Promise<void> {
     if (this.form.invalid) {

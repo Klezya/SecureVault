@@ -120,7 +120,7 @@ export class VaultItemCardComponent {
   constructor() {
     effect(() => {
       this.decryptItem();
-    }, { allowSignalWrites: true });
+    });
   }
 
   private async decryptItem() {

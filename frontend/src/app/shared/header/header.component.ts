@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -40,8 +41,28 @@ import { ThemeService } from '../../core/services/theme.service';
           <span class="text-sm font-semibold tracking-tight">SecureVault</span>
         </a>
 
-        <!-- Theme toggle -->
-        <button
+        <!-- Vault button - visible only when authenticated -->
+        <div class="flex items-center gap-2">
+          @if (auth.isAuthenticated()) {
+            <a
+              routerLink="/vault"
+              class="px-4 py-2 text-sm font-medium text-emerald-600 transition-colors hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+              aria-label="Ir a Vault — mis contraseñas"
+            >
+              Vault
+            </a>
+            <button
+              type="button"
+              (click)="logout()"
+              class="px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+              aria-label="Cerrar sesión"
+            >
+              Cerrar sesión
+            </button>
+          }
+
+          <!-- Theme toggle -->
+          <button
           type="button"
           (click)="theme.toggle()"
           [attr.aria-label]="theme.isDark() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
@@ -84,6 +105,7 @@ import { ThemeService } from '../../core/services/theme.service';
             </svg>
           }
         </button>
+        </div>
 
       </div>
     </header>
@@ -91,4 +113,9 @@ import { ThemeService } from '../../core/services/theme.service';
 })
 export class HeaderComponent {
   protected readonly theme = inject(ThemeService);
+  protected readonly auth = inject(AuthService);
+
+  logout(): void {
+    this.auth.logout().subscribe();
+  }
 }

@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { VaultItemFormComponent } from './vault-item-form.component';
 import { VaultItemCardComponent } from './vault-item-card.component';
 import { VaultItemViewComponent } from './vault-item-view.component';
 import { VaultService, VaultItemPublic } from '../core/services/vault.service';
-import { AuthService } from '../core/services/auth.service';
 import { CryptoService } from '../core/services/crypto.service';
 
 @Component({
@@ -17,9 +15,7 @@ import { CryptoService } from '../core/services/crypto.service';
 })
 export class VaultDashboardComponent implements OnInit {
   private vaultService = inject(VaultService);
-  private authService = inject(AuthService);
   private cryptoService = inject(CryptoService);
-  private router = inject(Router);
 
   // Modal state
   showModal = signal(false);
@@ -160,10 +156,5 @@ export class VaultDashboardComponent implements OnInit {
 
   retryLoad() {
     this.loadItems();
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }

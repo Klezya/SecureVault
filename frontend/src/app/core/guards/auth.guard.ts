@@ -9,7 +9,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   // El navegador las envía automáticamente en cada request con withCredentials: true
   const accessToken = localStorage.getItem('access_token');
   
-  console.log('AuthGuard check:', { accessTokenExists: !!accessToken });
   
   if (accessToken) {
     // Token presente, permitir acceso

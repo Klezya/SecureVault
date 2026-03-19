@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -40,6 +40,9 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly apiUrl = environment.apiUrl;
 
+  /** Signal reactiva para estado de autenticación */
+  isAuthenticated = signal<boolean>(!!localStorage.getItem('access_token'));
+
   /** Subject para coordinar refreshes simultáneos (evita múltiples refresh calls) */
   private _refreshSubject = new BehaviorSubject<boolean>(false);
   public isRefreshing$ = this._refreshSubject.asObservable();
@@ -62,6 +65,8 @@ export class AuthService {
         // Guardar el token y tipo en localStorage
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('token_type', response.token_type);
+        // Actualizar signal
+        this.isAuthenticated.set(true);
       })
     );
   }
@@ -78,6 +83,8 @@ export class AuthService {
       tap((response) => {
         localStorage.setItem('access_token', response.access_token);
         // El refresh_token se actualiza automáticamente en la cookie
+        // Actualizar signal
+        this.isAuthenticated.set(true);
       }),
       finalize(() => {
         // Marcar que terminó el refresh
@@ -91,11 +98,6 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  /** Verificar si hay sesión activa */
-  isAuthenticated(): boolean {
-    return !!this.getToken();
-  }
-
   /** Logout con notificación al servidor y limpieza local */
   logout() {
     return this.http.post(
@@ -105,6 +107,8 @@ export class AuthService {
       finalize(() => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('token_type');
+        // Actualizar signal
+        this.isAuthenticated.set(false);
         this.router.navigate(['/login'], {
           queryParams: { reason: 'session_expired' }
         });

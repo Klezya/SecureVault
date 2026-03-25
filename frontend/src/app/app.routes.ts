@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { vaultKeyGuard } from './core/guards/vault-key.guard';
 
 export const routes: Routes = [
   {
@@ -21,7 +22,7 @@ export const routes: Routes = [
     path: 'vault',
     loadComponent: () =>
       import('./vault/vault-dashboard.component').then((m) => m.VaultDashboardComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, vaultKeyGuard],
   },
   {
     path: '**',

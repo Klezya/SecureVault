@@ -42,6 +42,8 @@ export class LoginComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['reason'] === 'session_expired') {
         this.errorMessage.set('Tu sesión expiró. Por favor, inicia sesión nuevamente.');
+      } else if (params['reason'] === 'vault_locked') {
+        this.errorMessage.set('Tu bóveda está bloqueada. Inicia sesión para restaurar la clave de cifrado.');
       }
     });
   }

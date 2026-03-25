@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { tap, finalize } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { CryptoService } from './crypto.service';
 
   // Zero-knowledge — el servidor nunca ve la contraseña
 export interface RegisterPayload {
@@ -38,6 +39,7 @@ export interface LoginResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly cryptoService = inject(CryptoService);
   private readonly apiUrl = environment.apiUrl;
 
   /** Signal reactiva para estado de autenticación */
@@ -105,6 +107,7 @@ export class AuthService {
       {}
     ).pipe(
       finalize(() => {
+        this.cryptoService.clearSession();
         localStorage.removeItem('access_token');
         localStorage.removeItem('token_type');
         // Actualizar signal

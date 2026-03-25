@@ -10,7 +10,7 @@ import { VaultItemPublic } from '../core/services/vault.service';
   template: `
     <article class="sv-card p-4 sm:p-5">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0 pr-2">
           @if (item.item_type === 'password') {
             <div>
               <h3 class="truncate text-xl" style="color: var(--sv-text);">
@@ -18,15 +18,15 @@ import { VaultItemPublic } from '../core/services/vault.service';
               </h3>
               <div class="sv-muted mt-2 space-y-1 text-sm">
                 @if (decryptedUsername()) {
-                  <p>
+                  <p class="truncate">
                     <span class="font-semibold">Usuario:</span>
-                    <span class="ml-1">{{ decryptedUsername() }}</span>
+                    <span class="ml-1 truncate">{{ decryptedUsername() }}</span>
                   </p>
                 }
                 @if (decryptedEmail()) {
-                  <p>
+                  <p class="truncate">
                     <span class="font-semibold">Correo:</span>
-                    <span class="ml-1">{{ decryptedEmail() }}</span>
+                    <span class="ml-1 truncate">{{ decryptedEmail() }}</span>
                   </p>
                 }
               </div>
@@ -46,11 +46,11 @@ import { VaultItemPublic } from '../core/services/vault.service';
           </p>
         </div>
 
-        <div class="flex flex-row gap-2 sm:flex-col">
+        <div class="flex flex-row gap-1 sm:flex-col sm:gap-2">
           <button
             type="button"
             (click)="onView()"
-            class="sv-btn sv-btn-secondary px-3"
+            class="sv-btn sv-btn-action px-2.5 py-2"
             [attr.aria-label]="'Ver ' + (item.item_type === 'password' ? 'contraseña' : 'nota')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -61,7 +61,7 @@ import { VaultItemPublic } from '../core/services/vault.service';
           <button
             type="button"
             (click)="onEdit()"
-            class="sv-btn sv-btn-secondary px-3"
+            class="sv-btn sv-btn-action px-2.5 py-2"
             [attr.aria-label]="'Editar ' + (item.item_type === 'password' ? 'contraseña' : 'nota')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -71,7 +71,7 @@ import { VaultItemPublic } from '../core/services/vault.service';
           <button
             type="button"
             (click)="onDelete()"
-            class="sv-btn sv-btn-danger px-3"
+            class="sv-btn sv-btn-action-danger px-2.5 py-2"
             [attr.aria-label]="'Eliminar ' + (item.item_type === 'password' ? 'contraseña' : 'nota')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
@@ -153,7 +153,9 @@ export class VaultItemCardComponent {
   }
 
   formatDate(dateString: string): string {
+    if (!dateString) return 'Sin fecha';
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Sin fecha';
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'short',

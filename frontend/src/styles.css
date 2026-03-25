@@ -11,31 +11,31 @@
 
 @layer base {
   :root {
-    --sv-bg: #f4f0e8;
-    --sv-bg-alt: #ece5d9;
-    --sv-surface: #fdfaf3;
+    --sv-bg: #faf3eb;
+    --sv-bg-alt: #f5ede3;
+    --sv-surface: #ffffff;
     --sv-surface-strong: #ffffff;
-    --sv-border: #d8cebd;
-    --sv-text: #251f17;
-    --sv-text-muted: #605444;
-    --sv-primary: #2f6a4f;
-    --sv-primary-strong: #204d39;
-    --sv-danger: #8f2930;
-    --sv-focus: #2f6a4f;
+    --sv-border: #e0d9cc;
+    --sv-text: #1a1410;
+    --sv-text-muted: #6b5d50;
+    --sv-primary: #047857;
+    --sv-primary-strong: #036645;
+    --sv-danger: #b91c1c;
+    --sv-focus: #047857;
   }
 
   .dark {
-    --sv-bg: #161410;
-    --sv-bg-alt: #1f1a14;
-    --sv-surface: #27221a;
-    --sv-surface-strong: #2f2920;
-    --sv-border: #4a4033;
-    --sv-text: #f3ebdc;
-    --sv-text-muted: #c5b79e;
-    --sv-primary: #7ac8a0;
-    --sv-primary-strong: #95d8b6;
-    --sv-danger: #f09ea3;
-    --sv-focus: #95d8b6;
+    --sv-bg: #0a0f1c;
+    --sv-bg-alt: #131f33;
+    --sv-surface: #1a2a3d;
+    --sv-surface-strong: #1f2f44;
+    --sv-border: #2d3f54;
+    --sv-text: #e8ecf1;
+    --sv-text-muted: #94a3b8;
+    --sv-primary: #0d8659;
+    --sv-primary-strong: #10a662;
+    --sv-danger: #d63141;
+    --sv-focus: #0d8659;
   }
 
   html {
@@ -62,7 +62,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     letter-spacing: -0.02em;
   }
 
@@ -120,6 +120,15 @@
 
   .sv-btn-primary:hover {
     background-color: var(--sv-primary-strong);
+    color: #fffefb;
+  }
+
+  .dark .sv-btn-primary {
+    color: #fffefb;
+  }
+
+  .dark .sv-btn-primary:hover {
+    color: #fffefb;
   }
 
   .sv-btn-primary:focus-visible {
@@ -138,12 +147,36 @@
 
   .sv-btn-danger {
     background-color: transparent;
-    border: 1px solid color-mix(in oklab, var(--sv-danger) 40%, var(--sv-border));
+    border: 1px solid color-mix(in oklab, var(--sv-danger) 60%, var(--sv-border));
     color: var(--sv-danger);
   }
 
   .sv-btn-danger:hover {
     background-color: color-mix(in oklab, var(--sv-danger) 14%, transparent);
+  }
+
+  .sv-btn-action {
+    background-color: transparent;
+    border: none;
+    color: var(--sv-text-muted);
+    transition: all 150ms ease-in-out;
+  }
+
+  .sv-btn-action:hover {
+    background-color: color-mix(in oklab, var(--sv-primary) 10%, transparent);
+    color: var(--sv-text);
+  }
+
+  .sv-btn-action-danger {
+    background-color: transparent;
+    border: 1px solid color-mix(in oklab, var(--sv-danger) 50%, transparent);
+    color: var(--sv-danger);
+    transition: all 150ms ease-in-out;
+  }
+
+  .sv-btn-action-danger:hover {
+    background-color: color-mix(in oklab, var(--sv-danger) 14%, transparent);
+    border-color: color-mix(in oklab, var(--sv-danger) 60%, var(--sv-border));
   }
 
   .sv-pill {
@@ -154,5 +187,22 @@
 
   .sv-muted {
     color: var(--sv-text-muted);
+  }
+
+  .sv-tab {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 relative pb-3.5;
+    color: var(--sv-text-muted);
+    background: transparent;
+    border: none;
+  }
+
+  .sv-tab.active {
+    color: var(--sv-text);
+    border-bottom: 2px solid var(--sv-primary);
+    margin-bottom: -0.5px;
+  }
+
+  .sv-tab:hover {
+    color: var(--sv-text);
   }
 }
